@@ -1,8 +1,6 @@
 # from __future__ import unicode_literals
 import turicreate as tc
-from prompt_toolkit import prompt
 import threading
-import socket
 import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -59,12 +57,6 @@ def calculateDistance(box_height, image_height):
     focalLength = (image_height * distanceAtFull) / targetSizeInInches
     return (targetSizeInInches * focalLength) / box_height
 
-def main():
-    img_path = prompt()
-    img_path = img_path.replace(' ', '')
-    image = tc.Image(img_path)
-    run(image)
-
 def run(image, removeAlpha = False):
     sf = tc.SFrame({'image': [image]})
 
@@ -88,78 +80,6 @@ def run(image, removeAlpha = False):
     vertical = calculateVertical(y, height, image.height)
     distance = calculateDistance(height, image.height)
     print('[' + str(horizontal) + "," + str(vertical) + "," + str(distance) + ']')
-
-
-def mainVideo():
-
-    cv2.namedWindow("preview")
-    cv2.namedWindow("result")
-
-    vc = cv2.VideoCapture(0)
-
-    height = 0
-    width = 0
-
-    currentFrame = 0
-
-    if vc.isOpened(): # try to get the first frame
-        rval, frame = vc.read()
-        height = vc.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        width = vc.get(cv2.CAP_PROP_FRAME_WIDTH)
-    else:
-        rval = False
-
-    while rval:
-        cv2.imshow("preview", frame)
-        rval, frame = vc.read()
-        
-        if (currentFrame == 10):
-            currentFrame = 0
-            image = tc.Image(_image_data=frame.tobytes(),
-                    _width=width,
-                    _height=height,
-                    _channels=3,
-                    _format_enum=2,
-                    _image_data_size=width * height * 3)
-
-            thread = threading.Thread(target=run, args=([image, False]))
-            thread.start()
-        else:
-            currentFrame = currentFrame + 1
-
-        key = cv2.waitKey(20)
-        if key == 27: # exit on ESC
-            break
-    cv2.destroyWindow("preview")
-
-def mainServer():
-    serv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    serv.bind(ADDR)
-    serv.listen()
-
-    while True:
-        conn, addr = serv.accept()
-
-        while True:
-            data = conn.recv(BUFSIZE)
-            if not data: break
-            try:
-                height = 480
-                width = 640
-                print(len(data))
-                image = tc.Image(_image_data=data,
-                        _width=width,
-                        _height=height,
-                        _channels=3,
-                        _format_enum=2,
-                        _image_data_size=width * height * 3)
-
-                thread = threading.Thread(target=run, args=([image]))
-                thread.start()
-            except:
-                print("error")
-    conn.close()
 
 class Watcher:
     DIRECTORY_TO_WATCH = "/Users/danielpourhadi/tmp/guided/"
