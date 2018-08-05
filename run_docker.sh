@@ -1,0 +1,1 @@
+docker run -it -a STDOUT -a STDIN --name guided_flying --rm --mount type=bind,source="/tmp/",target=/app/target,readonly guided_flying
