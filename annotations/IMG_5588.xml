@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>IMG_5588.png</filename>
+	<path>/Users/danielpourhadi/Projects/guided_flying/images/IMG_5588.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>454</width>
+		<height>605</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>target</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>213</xmin>
+			<ymin>235</ymin>
+			<xmax>243</xmax>
+			<ymax>266</ymax>
+		</bndbox>
+	</object>
+</annotation>
